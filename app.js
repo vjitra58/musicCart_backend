@@ -37,13 +37,14 @@ app.use("/api/product", product);
 
 
 
-export default app;
-
 
 app.get("/", (req, res) => {
-    res.send("Hello World!");
-})
-
+  res.send(
+    `<h1>this is the frontend url <a href="${process.env.FRONTEND_URL}">this</a></h1>`
+    );
+  });
+  
+  export default app;
 
 app.use(ErrorMiddleware);
 
