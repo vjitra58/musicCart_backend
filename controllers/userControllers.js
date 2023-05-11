@@ -4,7 +4,7 @@ import { User } from "../models/UserModel.js";
 import { sendToken } from "../utils/sendToken.js";
 import crypto from "crypto";
 import { Product } from "../models/ProductModel.js";
-import ErrorHandler from "../utils/errorHandler.js";
+import ErrorHandler from "../utils/ErrorHandler.js";
 
 
 
