@@ -18,8 +18,9 @@ app.use(
     origin: process.env.FRONTEND_URL,
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
-    AccessControlAllowOrigin: process.env.FRONTEND_URL,
     AccessControlAllowCredentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
+    maxAge: 3600,
   })
 );
 
