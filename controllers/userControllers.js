@@ -50,12 +50,6 @@ export const login = catchAsyncError(async (req, res, next) => {
 export const logout = catchAsyncError(async (req, res, next) => {
   res
     .status(200)
-    .cookie("token", null, {
-      expires: new Date(Date.now()),
-      // httpOnly: true,
-      secure: true,
-      sameSite: "none",
-    })
     .json({
       success: true,
       message: "Logged Out Successfully",
@@ -83,15 +77,41 @@ export const getCartItems = catchAsyncError(async (req, res, next) => {
 
   const data = user.cartItems.map(item => {
     return {
-      peoduct: item.id,
+      product: item.id,
       quantity: item.quantity,
     }
-  } )
+  })
+  let totalPrice = 0;
+  let discount = 0;
+  for(let i = 0; i < data.length; i++){
+    totalPrice += data[i].product.price * data[i].quantity;
+    // totalDiscount += data[i].product.discount * data[i].quantity;
+  }
 
   res.status(200).json({
     success: true,
     cartItems: data,
+    totalPrice: totalPrice,
+    discount:0,
+    fee: 50,
+    total : totalPrice - discount + 50,
   });
 })
 
+
+//place order api;
+export const placeOrder = catchAsyncError(async (req, res, next) => {
+
+  const user = await User.findById(req.user._id);
+  
+  user.cartItems = [];
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Order Placed Successfully"
+  });
+  
+})
 

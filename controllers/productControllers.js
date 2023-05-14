@@ -80,6 +80,8 @@ export const createProduct = catchAsyncError(async (req, res, next) => {
 export const addToCart = catchAsyncError(async (req, res, next) => {
 
     const product = await Product.findById(req.params.id);
+    // const userId = req.query.userId;
+    const q = req.body.quantity;
     if(!product){
         next(new ErrorHandler("Product not found", 404));
     }
@@ -88,10 +90,13 @@ export const addToCart = catchAsyncError(async (req, res, next) => {
 
     const cartItem = user.cartItems.find(item => item.id.toString() === product._id.toString());
     if(cartItem){
-        cartItem.quantity += 1;
+        if (cartItem.quantity + q >= 0) cartItem.quantity += q;
     }else{
-        user.cartItems.push({id : product._id, quantity: 1});
+        if(q >= 1)user.cartItems.push({id : product._id, quantity: 1});
     }
+    if(cartItem && cartItem.quantity <= 0) user.cartItems = user.cartItems.filter(item => item.id.toString() !== product._id.toString());
+
+
     await user.save();
     res.status(200).json({
         message: "product added to cart successfully",
